@@ -45,9 +45,6 @@ public class DiceGameActivity extends AppCompatActivity {
             imageLeft.setImageResource(dieLeft.getPictureId());
             imageRight.setImageResource(dieRight.getPictureId());
         }
-        if(!gd.isChecked()){
-            hideButton.setText(R.string.hide_btn_show);
-        }
     }
 
     public void hideBtnClick(View view) {

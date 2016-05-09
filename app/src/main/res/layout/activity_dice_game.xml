@@ -17,7 +17,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_small"
+                android:background="@drawable/button_small_with_state"
                 android:id="@+id/nextBtn"
                 android:text="@string/next_btn"
                 android:textColor="@color/colorBlack"
@@ -27,7 +27,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_small"
+                android:background="@drawable/button_small_with_state"
                 android:id="@+id/turnBtn"
                 android:layout_toRightOf="@id/nextBtn"
                 android:layout_marginLeft="10dp"
@@ -64,7 +64,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/button"
+        android:background="@drawable/button_with_state"
         android:layout_below="@id/DieFrame"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
@@ -76,7 +76,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/button"
+        android:background="@drawable/button_with_state"
         android:layout_below="@id/rollBtn"
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"

@@ -5,7 +5,7 @@ package group3.meyer_android.model;
  */
 public class GameData {
 
-    private boolean isChecked = false;
+    private boolean isChecked = true;
 
     public GameData(){
 
