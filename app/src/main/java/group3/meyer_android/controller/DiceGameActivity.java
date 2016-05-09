@@ -45,6 +45,9 @@ public class DiceGameActivity extends AppCompatActivity {
             imageLeft.setImageResource(dieLeft.getPictureId());
             imageRight.setImageResource(dieRight.getPictureId());
         }
+        if(!gd.isChecked()){
+            hideButton.setText(R.string.hide_btn_show);
+        }
     }
 
     public void hideBtnClick(View view) {
@@ -53,7 +56,12 @@ public class DiceGameActivity extends AppCompatActivity {
             imageRight.setImageAlpha(0);
             dieLeft.setVisible(false);
             dieRight.setVisible(false);
-            hideButton.setText(R.string.hide_btn_show);
+            if(gd.isChecked()){
+                hideButton.setText(R.string.hide_btn_call);
+            }
+            else{
+                hideButton.setText(R.string.hide_btn_show);
+            }
         } else{
             imageLeft.setImageAlpha(255);
             imageRight.setImageAlpha(255);
@@ -66,5 +74,6 @@ public class DiceGameActivity extends AppCompatActivity {
 
     public void turnBtnClick(View view) {
         gd.setChecked(false);
+
     }
 }
