@@ -6,6 +6,7 @@ package group3.meyer_android.model;
 public class Die {
 
     private int face;
+    private boolean isVisible = false;
 
     public Die(){
 
@@ -16,8 +17,18 @@ public class Die {
         return 0;
     }
 
-    public int getDie(){
+    public int getFace(){
 
-        return 0;
+        return face;
+    }
+
+    public boolean isVisible(){
+
+        return isVisible;
+    }
+
+    public void setVisible(boolean isVisible){
+
+        this.isVisible = isVisible;
     }
 }
