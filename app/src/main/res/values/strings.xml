@@ -2,7 +2,8 @@
     <string name="app_name">Meyer Game</string>
     <string name="roll_btn">Roll!</string>
     <string name="hide_btn_hide">Hide</string>
-    <string name="hide_btn_show">Call</string>
+    <string name="hide_btn_show">Show</string>
     <string name="next_btn">Next</string>
     <string name="turn_btn">Turn</string>
+    <string name="hide_btn_call">Call</string>
 </resources>
