@@ -8,9 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@android:id/list"
-        android:choiceMode="multipleChoice"
+        android:choiceMode="singleChoice"
         android:drawSelectorOnTop="true"
-        android:isScrollContainer="true" />
+        android:isScrollContainer="true"
+        android:listSelector="@drawable/list_selector"/>
 
     <TextView
         android:id="@android:id/empty"

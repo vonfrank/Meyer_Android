@@ -56,13 +56,15 @@ public class BluetoothListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
+        v.setSelected(true);
+
         if(!macs.contains(devices.get(position).toString()))
             macs.add(devices.get(position).toString());
     }
 
     public  void makeVisibleClick(){
         Intent getVisible = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        getVisible.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 20);
+        getVisible.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 1);
         startActivityForResult(getVisible, 1);
 
     }
