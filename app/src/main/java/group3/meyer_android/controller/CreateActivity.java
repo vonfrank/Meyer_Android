@@ -16,7 +16,6 @@ import group3.meyer_android.view.GameFragment;
 public class CreateActivity extends AppCompatActivity {
 
     private GameFragment gf;
-    private String serverMac;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +25,6 @@ public class CreateActivity extends AppCompatActivity {
             gf = new GameFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.GameContainer, gf).commit();
         }
-        serverMac = getIntent().getStringExtra("mac");
     }
 
 
