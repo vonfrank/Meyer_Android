@@ -16,13 +16,16 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Set;
 
+import group3.meyer_android.R;
+
 /**
  * Created by Mads on 10-05-2016.
  */
 public class BluetoothListFragment extends ListFragment {
 
     private BluetoothAdapter BA;
-    private BluetoothDevice[] pairedDevices = new BluetoothDevice[0];
+    private ArrayAdapter<BluetoothDevice> adapter;
+    private ArrayList<String> macs = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,18 +42,28 @@ public class BluetoothListFragment extends ListFragment {
             startActivityForResult(turnOn, 0);
         }
 
-        ArrayAdapter<BluetoothDevice> adapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_list_item_1, pairedDevices);
+        adapter = new ArrayAdapter<>(this.getContext(), R.layout.bluetooth_list_content);
         setListAdapter(adapter);
+    }
+
+    public ArrayList<String> getMacs(){
+        return macs;
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+
+        if(!macs.contains(adapter.getItem(position).toString()))
+            macs.add(adapter.getItem(position).toString());
+
+        System.out.println(macs.size());
     }
 
 
     public  void makeVisibleClick(){
         Intent getVisible = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        getVisible.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 20);
         startActivityForResult(getVisible, 1);
 
     }
@@ -76,11 +89,8 @@ public class BluetoothListFragment extends ListFragment {
         @Override
         protected void onPostExecute(Boolean done) {
             if(done) {
-                pairedDevices = BA.getBondedDevices().toArray(new BluetoothDevice[BA.getBondedDevices().size()]);
-                System.out.println(BA.getBondedDevices().size());
-            }
-            else{
-                System.out.println(BA.getBondedDevices().size());
+                adapter.clear();
+                adapter.addAll(BA.getBondedDevices());
             }
         }
     }
