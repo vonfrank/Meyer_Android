@@ -27,7 +27,7 @@ public class BluetoothListFragment extends ListFragment {
     private BluetoothAdapter BA;
     private ArrayAdapter<String> adapter;
     private ArrayList<BluetoothDevice> devices = new ArrayList<>();
-    private ArrayList<String> macs = new ArrayList<>();
+    private String selected;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,8 +48,8 @@ public class BluetoothListFragment extends ListFragment {
         setListAdapter(adapter);
     }
 
-    public ArrayList<String> getMacs(){
-        return macs;
+    public String getSelected(){
+        return selected;
     }
 
     @Override
@@ -57,9 +57,7 @@ public class BluetoothListFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
 
         v.setSelected(true);
-
-        if(!macs.contains(devices.get(position).toString()))
-            macs.add(devices.get(position).toString());
+        selected = devices.get(position).toString();
     }
 
     public  void makeVisibleClick(){

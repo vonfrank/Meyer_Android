@@ -16,8 +16,7 @@ import group3.meyer_android.view.GameFragment;
 public class CreateActivity extends AppCompatActivity {
 
     private GameFragment gf;
-    private Bundle recivedIntent;
-    private ArrayList<String> macAddrArrayList;
+    private String serverMac;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,23 +26,9 @@ public class CreateActivity extends AppCompatActivity {
             gf = new GameFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.GameContainer, gf).commit();
         }
-        getMacAddr();
+        serverMac = getIntent().getStringExtra("mac");
     }
 
-    private void getMacAddr(){
-        recivedIntent = getIntent().getExtras();
-        macAddrArrayList = new ArrayList<>();
-        int i = 1;
-        if(recivedIntent != null){
-            while(recivedIntent.getString("mac" + i) != null){
-                macAddrArrayList.add(recivedIntent.getString("mac" + i));
-                i++;
-            }
-        }
-        for(String s : macAddrArrayList){
-            System.out.println(s);
-        }
-    }
 
     public void nextBtnClick(View view) {
         System.out.println("Not implemented");

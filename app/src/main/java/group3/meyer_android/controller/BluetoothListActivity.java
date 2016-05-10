@@ -28,9 +28,7 @@ public class BluetoothListActivity extends AppCompatActivity {
 
     public void startGameClick(View view) {
         Intent start = new Intent(this, CreateActivity.class);
-        for(int i = 0; i < bluetoothListFragment.getMacs().size(); i++){
-            start.putExtra("mac" + i+1, bluetoothListFragment.getMacs().get(i));
-        }
+        start.putExtra("mac", bluetoothListFragment.getSelected());
 
         startActivity(start);
     }
