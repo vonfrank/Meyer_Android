@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -24,7 +25,8 @@ import group3.meyer_android.R;
 public class BluetoothListFragment extends ListFragment {
 
     private BluetoothAdapter BA;
-    private ArrayAdapter<BluetoothDevice> adapter;
+    private ArrayAdapter<String> adapter;
+    private ArrayList<BluetoothDevice> devices = new ArrayList<>();
     private ArrayList<String> macs = new ArrayList<>();
 
     @Override
@@ -54,12 +56,9 @@ public class BluetoothListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        if(!macs.contains(adapter.getItem(position).toString()))
-            macs.add(adapter.getItem(position).toString());
-
-        System.out.println(macs.size());
+        if(!macs.contains(devices.get(position).toString()))
+            macs.add(devices.get(position).toString());
     }
-
 
     public  void makeVisibleClick(){
         Intent getVisible = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -90,7 +89,15 @@ public class BluetoothListFragment extends ListFragment {
         protected void onPostExecute(Boolean done) {
             if(done) {
                 adapter.clear();
-                adapter.addAll(BA.getBondedDevices());
+                devices.clear();
+
+                ArrayList<String> temp = new ArrayList<>();
+                for(BluetoothDevice device : BA.getBondedDevices()){
+                    devices.add(device);
+                    temp.add(device.getName());
+                }
+                adapter.addAll(temp);
+
             }
         }
     }
