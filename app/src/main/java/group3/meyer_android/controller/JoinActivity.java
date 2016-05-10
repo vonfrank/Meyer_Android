@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import group3.meyer_android.R;
+import group3.meyer_android.view.GameFragment;
 
 public class JoinActivity extends AppCompatActivity {
 

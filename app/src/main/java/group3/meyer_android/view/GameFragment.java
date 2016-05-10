@@ -1,6 +1,7 @@
-package group3.meyer_android.controller;
+package group3.meyer_android.view;
 
 
+import android.bluetooth.BluetoothAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;

@@ -1,5 +1,10 @@
 package group3.meyer_android.model;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+
+import java.util.Set;
+
 /**
  * Created by Von Frank on 09-05-2016.
  */

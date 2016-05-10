@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="group3.meyer_android">
+
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
@@ -18,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".controller.CreateActivity" />
-        <activity android:name=".controller.JoinActivity"></activity>
+        <activity android:name=".controller.JoinActivity" />
+        <activity android:name=".controller.BluetoothListActivity"></activity>
     </application>
 
 </manifest>

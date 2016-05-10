@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void newGameClick(View view) {
-        Intent it = new Intent(this, CreateActivity.class);
+        Intent it = new Intent(this, BluetoothListActivity.class);
         startActivity(it);
     }
 
