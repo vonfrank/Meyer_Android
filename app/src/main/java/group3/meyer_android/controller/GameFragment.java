@@ -1,9 +1,11 @@
 package group3.meyer_android.controller;
 
-import android.media.Image;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -11,7 +13,7 @@ import group3.meyer_android.R;
 import group3.meyer_android.model.Die;
 import group3.meyer_android.model.GameData;
 
-public class DiceGameActivity extends AppCompatActivity {
+public class GameFragment extends Fragment {
 
     private Die dieLeft, dieRight;
     private ImageView imageLeft, imageRight;
@@ -19,9 +21,15 @@ public class DiceGameActivity extends AppCompatActivity {
     private GameData gd;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dice_game);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_game, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
         initialize();
     }
 
@@ -33,12 +41,12 @@ public class DiceGameActivity extends AppCompatActivity {
         int[] idArray = {R.drawable.die_01, R.drawable.die_02, R.drawable.die_03, R.drawable.die_04, R.drawable.die_05, R.drawable.die_06};
         dieLeft.setPictures(idArray);
         dieRight.setPictures(idArray);
-        imageLeft = (ImageView) findViewById(R.id.dieLeftImageView);
-        imageRight = (ImageView) findViewById(R.id.dieRightImageView);
-        hideButton = (Button) findViewById(R.id.hideBtn);
+        imageLeft = (ImageView) getView().findViewById(R.id.dieLeftImageView);
+        imageRight = (ImageView) getView().findViewById(R.id.dieRightImageView);
+        hideButton = (Button) getView().findViewById(R.id.hideBtn);
     }
 
-    public void rollBtnClick(View view) {
+    public void rollBtnClick() {
         if(!dieLeft.isVisible() && !gd.isChecked()){
             dieLeft.roll();
             dieRight.roll();
@@ -47,7 +55,7 @@ public class DiceGameActivity extends AppCompatActivity {
         }
     }
 
-    public void hideBtnClick(View view) {
+    public void hideBtnClick() {
         if(dieLeft.isVisible()){
             imageLeft.setImageAlpha(0);
             imageRight.setImageAlpha(0);
@@ -69,8 +77,7 @@ public class DiceGameActivity extends AppCompatActivity {
         }
     }
 
-    public void turnBtnClick(View view) {
+    public void turnBtnClick() {
         gd.setChecked(false);
-
     }
 }

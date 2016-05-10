@@ -6,4 +6,10 @@
     <string name="next_btn">Next</string>
     <string name="turn_btn">Turn</string>
     <string name="hide_btn_call">Call</string>
+    <string name="new_game_btn">New game</string>
+    <string name="join_game_btn">Join game</string>
+    <string name="about_btn">About</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

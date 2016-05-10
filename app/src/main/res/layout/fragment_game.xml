@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="group3.meyer_android.controller.DiceGameActivity"
+    tools:context="group3.meyer_android.controller.GameFragment"
     android:background="@drawable/table"
     android:gravity="center">
     <FrameLayout
