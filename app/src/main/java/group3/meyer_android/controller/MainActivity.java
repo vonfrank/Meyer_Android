@@ -16,12 +16,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void newGameClick(View view) {
-        Intent it = new Intent(this, BluetoothListActivity.class);
+        Intent it = new Intent(this, ListenActivity.class);
         startActivity(it);
     }
 
     public void joinGameClick(View view) {
-        Intent it = new Intent(this, JoinActivity.class);
+        Intent it = new Intent(this, BluetoothListActivity.class);
         startActivity(it);
     }
 
