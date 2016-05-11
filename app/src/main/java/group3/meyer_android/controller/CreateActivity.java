@@ -2,6 +2,7 @@ package group3.meyer_android.controller;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,16 +12,22 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import group3.meyer_android.R;
+import group3.meyer_android.model.ApplicationData;
 import group3.meyer_android.view.GameFragment;
 
 public class CreateActivity extends AppCompatActivity {
 
     private GameFragment gf;
+    private ArrayList<BluetoothSocket> btSocketArray;
+    private ApplicationData appData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
+        appData = (ApplicationData)getApplication();
+        btSocketArray = appData.getSockets();
+
         if(savedInstanceState == null) {
             gf = new GameFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.GameContainer, gf).commit();

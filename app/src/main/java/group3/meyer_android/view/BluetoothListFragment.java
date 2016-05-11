@@ -62,7 +62,7 @@ public class BluetoothListFragment extends ListFragment {
 
     public  void makeVisibleClick(){
         Intent getVisible = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        getVisible.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 30);
+        getVisible.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3);
         startActivityForResult(getVisible, 1);
 
     }

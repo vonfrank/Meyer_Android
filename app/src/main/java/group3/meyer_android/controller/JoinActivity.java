@@ -31,14 +31,17 @@ public class JoinActivity extends AppCompatActivity {
     private BufferedReader bufferedreader;
     private BufferedWriter bufferedwritter;
     private String data;
-    private ApplicationData appData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
+<<<<<<< HEAD
         appData = (ApplicationData)getApplication();
 
+=======
+        
+>>>>>>> cecb2b22165428daccd8e0a930468e70da59e832
         if(savedInstanceState == null) {
             gf = new GameFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.GameContainer, gf).commit();
