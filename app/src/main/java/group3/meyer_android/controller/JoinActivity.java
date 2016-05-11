@@ -1,5 +1,8 @@
 package group3.meyer_android.controller;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +14,9 @@ public class JoinActivity extends AppCompatActivity {
 
     private GameFragment gf;
     private String serverMac;
+    private BluetoothSocket btSocket = null;
+    private BluetoothAdapter btAdapter = null;
+    private BluetoothDevice btDevice = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +28,12 @@ public class JoinActivity extends AppCompatActivity {
         }
 
         serverMac = getIntent().getStringExtra("mac");
+
+        this.btAdapter = BluetoothAdapter.getDefaultAdapter();
+        this.btDevice = btAdapter.getRemoteDevice(serverMac);
+
+        new Thread(new BluetoothClientController(btDevice, btAdapter)).start();
+
     }
 
     public void nextBtnClick(View view) {

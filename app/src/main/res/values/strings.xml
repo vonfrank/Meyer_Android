@@ -10,6 +10,7 @@
     <string name="join_game_btn">Join game</string>
     <string name="about_btn">About</string>
     <string name="makeVisibleBtnText">Make\nvisible</string>
+    <string name="startServerBtnText">Start server</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
