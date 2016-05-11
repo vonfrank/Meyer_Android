@@ -1,22 +1,31 @@
 package group3.meyer_android.controller;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+
+import java.io.IOException;
+import java.util.UUID;
 
 import group3.meyer_android.R;
 
 public class ListenActivity extends AppCompatActivity {
 
     private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothSocket btSocket = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listen);
+
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if(mBluetoothAdapter == null){
             System.out.println("Device not supported");
@@ -29,6 +38,51 @@ public class ListenActivity extends AppCompatActivity {
     }
 
     public void startServerClick(View view) {
-        new Thread(new BluetoothServerController(mBluetoothAdapter)).start();
+        new SocketConnection().execute();
+    }
+
+    private class SocketConnection extends AsyncTask<String, Void, BluetoothSocket> {
+
+        private BluetoothAdapter mBluetoothAdapter;
+        private UUID RFCOMM_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+        private String BT_NAME = "MeyerGame";
+        private BluetoothServerSocket mmServerSocket;
+
+        public SocketConnection() {
+            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            BluetoothServerSocket tmp = null;
+            try {
+                tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(BT_NAME, RFCOMM_UUID);
+            } catch (IOException e) {
+            }
+
+            mmServerSocket = tmp;
+        }
+
+        @Override
+        protected BluetoothSocket doInBackground(String... params) {
+            mBluetoothAdapter.cancelDiscovery();
+            BluetoothSocket socket = null;
+
+            while (socket == null) {
+                try {
+                    System.out.println("Server is listening");
+                    socket = mmServerSocket.accept();
+                } catch (IOException e) {
+                    break;
+                }
+
+                if (socket != null) {
+                    System.out.println("Connection to device with mac address: " + socket.getRemoteDevice().getAddress() + " has been created!");
+                    return socket;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(BluetoothSocket socket) {
+            btSocket = socket;
+        }
     }
 }
