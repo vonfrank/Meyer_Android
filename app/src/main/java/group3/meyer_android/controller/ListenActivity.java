@@ -12,21 +12,25 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import group3.meyer_android.R;
+import group3.meyer_android.model.ApplicationData;
 
 public class ListenActivity extends AppCompatActivity {
 
     private BluetoothAdapter mBluetoothAdapter;
-    private BluetoothSocket btSocket = null;
+    private ArrayList<BluetoothSocket> btSockets = null;
+    private ApplicationData appData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listen);
-
+        appData = (ApplicationData)getApplication();
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
         if(mBluetoothAdapter == null){
             System.out.println("Device not supported");
         } else{
@@ -35,10 +39,18 @@ public class ListenActivity extends AppCompatActivity {
                 startActivityForResult(enableBtIntent, 0);
             }
         }
+
+        btSockets = new ArrayList<>();
     }
 
     public void startServerClick(View view) {
         new SocketConnection().execute();
+    }
+
+    public void startGameClick(View view) {
+        appData.setSockets(btSockets);
+        Intent newGameIntent = new Intent(this, CreateActivity.class);
+        startActivity(newGameIntent);
     }
 
     private class SocketConnection extends AsyncTask<String, Void, BluetoothSocket> {
@@ -82,7 +94,7 @@ public class ListenActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(BluetoothSocket socket) {
-            btSocket = socket;
+            btSockets.add(socket);
         }
     }
 }
