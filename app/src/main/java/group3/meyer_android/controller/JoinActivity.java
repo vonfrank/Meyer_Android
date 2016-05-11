@@ -38,7 +38,7 @@ public class JoinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
         appData = (ApplicationData)getApplication();
-        
+
         if(savedInstanceState == null) {
             gf = new GameFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.GameContainer, gf).commit();
