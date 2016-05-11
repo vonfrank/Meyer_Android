@@ -18,6 +18,7 @@ import java.io.OutputStreamWriter;
 import java.util.UUID;
 
 import group3.meyer_android.R;
+import group3.meyer_android.model.ApplicationData;
 import group3.meyer_android.view.GameFragment;
 
 public class JoinActivity extends AppCompatActivity {
@@ -30,11 +31,14 @@ public class JoinActivity extends AppCompatActivity {
     private BufferedReader bufferedreader;
     private BufferedWriter bufferedwritter;
     private String data;
+    private ApplicationData appData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
+        appData = (ApplicationData)getApplication();
+        
         if(savedInstanceState == null) {
             gf = new GameFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.GameContainer, gf).commit();
