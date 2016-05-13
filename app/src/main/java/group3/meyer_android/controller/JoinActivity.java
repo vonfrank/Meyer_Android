@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.sql.SQLOutput;
 import java.util.UUID;
 
 import group3.meyer_android.R;
@@ -67,7 +68,8 @@ public class JoinActivity extends AppCompatActivity {
     }
 
     public void turnBtnClick(View view) {
-        gf.turnBtnClick();
+        //gf.turnBtnClick();
+        new SendText(bufferedwritter).execute("test string");
     }
 
     public void rollBtnClick(View view) {
@@ -87,14 +89,19 @@ public class JoinActivity extends AppCompatActivity {
 
         public SendText(BufferedWriter writer){
             bufferedwriter = writer;
+            System.out.println(bufferedwriter.toString());
         }
 
         @Override
         protected Void doInBackground(String... params) {
+            System.out.println("I am in the Execute with this param: " + params[0]);
             try {
                 bufferedwriter.write(params[0]);
+                System.out.println("I wrote shit");
                 bufferedwriter.newLine();
+                System.out.println("Sending new line");
                 bufferedwriter.flush();
+                System.out.println("Flushed");
             } catch (IOException e) {
                 e.printStackTrace();
             }

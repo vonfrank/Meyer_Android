@@ -28,8 +28,9 @@ public class CreateActivity extends AppCompatActivity {
     private GameFragment gf;
     private ArrayList<BluetoothSocket> btSocketArray;
     private ApplicationData appData;
-    private ArrayList<BufferedReader> bufferedreaders = new ArrayList<>();;
-    private ArrayList<BufferedWriter> bufferedwritters = new ArrayList<>();;
+    private ArrayList<BufferedReader> bufferedreaders = new ArrayList<>();
+    private ArrayList<BufferedWriter> bufferedwritters = new ArrayList<>();
+    private String data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class CreateActivity extends AppCompatActivity {
         setInOutStreams();
 
         for(int i = 0; i < btSocketArray.size(); i++){
-            new SendText(bufferedwritters.get(i)).execute("test");
+            new RecieveText(bufferedreaders.get(i)).execute();
         }
 
         if(savedInstanceState == null) {
@@ -134,6 +135,8 @@ public class CreateActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             data = s;
+            System.out.println(data);
+            new RecieveText(bufferedreader).execute();
         }
     }
 
