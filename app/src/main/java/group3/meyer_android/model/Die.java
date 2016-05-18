@@ -10,7 +10,7 @@ public class Die {
     private int face;
     private Random random;
     private int[] pictures = new int[6];
-    private Boolean isVisible = true;
+    private Boolean isVisible = false;
 
     public Die(){ random = new Random(); }
 

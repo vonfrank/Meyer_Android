@@ -51,7 +51,9 @@ public class GameFragment extends Fragment {
         gd = new GameData();
         int[] idArray = {R.drawable.die_01, R.drawable.die_02, R.drawable.die_03, R.drawable.die_04, R.drawable.die_05, R.drawable.die_06};
         dieRight = new Die();
+        dieRight.setFace(gd.getRightFace());
         dieLeft = new Die();
+        dieLeft.setFace(gd.getLeftFace());
         dieLeft.setPictures(idArray);
         dieRight.setPictures(idArray);
         imageLeft = (ImageView) getView().findViewById(R.id.dieLeftImageView);
@@ -60,10 +62,12 @@ public class GameFragment extends Fragment {
     }
 
     public void rollBtnClick() {
-        if(gd.getCurrentPlayer().equals(btadress)) {
+        if(gd.getCurrentPlayer().equals(btadress) && !dieLeft.getVisible()) {
             //if(!dieLeft.getVisible() && gd.getCheckState() <= 2){
             dieLeft.roll();
             dieRight.roll();
+            gd.setLeftFace(dieLeft.getFace());
+            gd.setRightFace(dieRight.getFace());
             imageLeft.setImageResource(dieLeft.getPictureId());
             imageRight.setImageResource(dieRight.getPictureId());
             //}
@@ -71,6 +75,22 @@ public class GameFragment extends Fragment {
     }
 
     public void hideBtnClick() {
+        if(gd.getCurrentPlayer().equals(btadress)){
+            if(!dieLeft.getVisible() && gd.getCheckState() > 1){
+                imageLeft.setImageAlpha(255);
+                imageRight.setImageAlpha(255);
+                dieLeft.setVisible(true);
+                dieRight.setVisible(true);
+                hideButton.setText(R.string.hide_btn_hide);
+                gd.decrementChechState();
+            } else{
+                gd.decrementChechState();
+                imageLeft.setImageAlpha(0);
+                imageRight.setImageAlpha(0);
+                dieLeft.setVisible(false);
+                dieRight.setVisible(false);
+        }
+    }
         /*if(dieLeft.getVisible()){
             imageLeft.setImageAlpha(0);
             imageRight.setImageAlpha(0);
@@ -102,11 +122,18 @@ public class GameFragment extends Fragment {
     public void nextBtnClick(){
         if(!gd.getCurrentPlayer().equals("free") && gd.getCurrentPlayer().equals(btadress)){
             gd.setCurrentPlayer("free");
+            gd.resetCheckState();
         }
     }
 
     public void setGameData(GameData gd){
         this.gd = gd;
+        dieLeft.setFace(gd.getLeftFace());
+        dieRight.setFace(gd.getRightFace());
+        imageLeft.setImageResource(dieLeft.getPictureId());
+        imageRight.setImageResource(dieRight.getPictureId());
+        imageLeft.setImageAlpha(0);
+        imageRight.setImageAlpha(0);
     }
 
     public GameData getGameData(){ return gd; }

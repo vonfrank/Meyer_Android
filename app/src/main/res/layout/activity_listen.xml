@@ -23,5 +23,6 @@
         android:text="@string/startGameBtnText"
         android:textSize="30dp"
         android:layout_below="@id/startServerBtn"
+        android:layout_marginTop="20dp"
         android:onClick="startGameClick"/>
 </RelativeLayout>

@@ -81,6 +81,7 @@ public class CreateActivity extends AppCompatActivity {
 
     public void turnBtnClick(View view) {
         gf.turnBtnClick();
+        gf.setGameData(gf.getGameData());
 
         broadcastGameData(gf.getGameData().toJSON());
     }

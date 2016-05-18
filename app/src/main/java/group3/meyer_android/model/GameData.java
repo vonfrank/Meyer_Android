@@ -19,9 +19,12 @@ public class GameData {
 
     private int leftFace, rightFace;
     private String currentPlayer = "free";
-    private int checkState = 0;
+    private int checkState = 2;
 
-    public GameData(){}
+    public GameData(){
+        leftFace = 3;
+        rightFace = 2;
+    }
 
     public int getLeftFace() {
         return leftFace;
@@ -47,11 +50,11 @@ public class GameData {
 
     public String getCurrentPlayer(){ return currentPlayer; }
 
-    public void incrementChechState(){ checkState++; }
+    public void decrementChechState(){ checkState--; }
 
     public int getCheckState(){ return checkState; }
 
-    public void resetCheckState(){ checkState = 0; }
+    public void resetCheckState(){ checkState = 2; }
 
     public String toJSON(){
         JSONObject obj = new JSONObject();
