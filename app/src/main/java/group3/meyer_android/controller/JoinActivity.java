@@ -13,11 +13,14 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.UUID;
 
 import group3.meyer_android.R;
+import group3.meyer_android.model.GameData;
 import group3.meyer_android.view.GameFragment;
 
 public class JoinActivity extends AppCompatActivity {
@@ -28,6 +31,8 @@ public class JoinActivity extends AppCompatActivity {
     private BluetoothSocket btSocket = null;
     private BufferedReader bufferedreader;
     private BufferedWriter bufferedwritter;
+    private ObjectInputStream ois;
+    private ObjectOutputStream oos;
     private String data;
 
     @Override
@@ -58,6 +63,13 @@ public class JoinActivity extends AppCompatActivity {
 
         bufferedreader = new BufferedReader(new InputStreamReader(inputstream));
         bufferedwritter = new BufferedWriter(new OutputStreamWriter(outputStream));
+
+        try{
+            ois = new ObjectInputStream(inputstream);
+            oos = new ObjectOutputStream(outputStream);
+        } catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     public void nextBtnClick(View view) {
@@ -65,9 +77,8 @@ public class JoinActivity extends AppCompatActivity {
     }
 
     public void turnBtnClick(View view) {
-        //gf.turnBtnClick();
         //CMD 1: turn
-        new SendCommand(bufferedwritter).execute(clientMac + " 1");
+        new SendCommand(bufferedwritter).execute(clientMac);
     }
 
     public void rollBtnClick(View view) {
@@ -95,11 +106,15 @@ public class JoinActivity extends AppCompatActivity {
                 bufferedwriter.write(params[0]);
                 bufferedwriter.newLine();
                 bufferedwriter.flush();
-                System.out.println("Client with mac addr called: " + params[0] + " successfully");
+                System.out.println("Client with mac addr called: " + params[0] + " turn successfully");
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        protected void onPostExecute(){
+            new RecieveGameData(ois).execute();
         }
     }
 
@@ -129,6 +144,55 @@ public class JoinActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             data = s;
+        }
+    }
+
+    private class PushGameData extends AsyncTask<Object, Void, Void> {
+        private ObjectOutputStream oos = null;
+
+        public PushGameData(ObjectOutputStream ooos){ oos = ooos; }
+
+        @Override
+        protected Void doInBackground(Object... params) {
+            Object gameData = null;
+
+            try {
+                oos.writeObject(gameData);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
+    private class RecieveGameData extends AsyncTask<Void, Void, Object> {
+        private ObjectInputStream ois = null;
+
+        public RecieveGameData(ObjectInputStream oois) {
+            ois = oois;
+        }
+
+        @Override
+        protected Object doInBackground(Void... params) {
+            Object tmpGameData = null;
+
+            try {
+                tmpGameData = ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            return tmpGameData;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            if(o != null){
+                gf.setGameData((GameData) o);
+            }else {
+                System.out.println("NOTHING WAS RECIEVED!!");
+            }
         }
     }
 

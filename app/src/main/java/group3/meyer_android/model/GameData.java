@@ -17,6 +17,7 @@ public class GameData {
     private Die leftDie, rightDie;
     private HashMap<BluetoothSocket, Boolean> players;
     private Boolean serverPlayerState = false;
+    private int checkState = 0;
 
     public GameData(){
         leftDie = new Die();
@@ -55,5 +56,17 @@ public class GameData {
                 sockets.setValue(state);
             }
         }
+    }
+
+    public void incrementChechState(){
+        checkState++;
+    }
+
+    public int getCheckState(){
+        return checkState;
+    }
+
+    public void resetCheckState(){
+        checkState = 0;
     }
 }

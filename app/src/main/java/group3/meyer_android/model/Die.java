@@ -10,6 +10,7 @@ public class Die {
     private int face;
     private Random random;
     private int[] pictures = new int[6];
+    private Boolean isVisible = true;
 
     public Die(){
         random = new Random();
@@ -33,5 +34,13 @@ public class Die {
     public int getPictureId(){
 
         return pictures[face-1];
+    }
+
+    public void setVisible(Boolean state){
+        isVisible = state;
+    }
+
+    public Boolean getVisible(){
+        return isVisible;
     }
 }

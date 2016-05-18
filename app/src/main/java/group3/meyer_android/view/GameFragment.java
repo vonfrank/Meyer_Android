@@ -44,22 +44,23 @@ public class GameFragment extends Fragment {
     }
 
     public void rollBtnClick() {
-        /*if(!dieLeft.isVisible() && !gd.isChecked()){
+        if(!dieLeft.getVisible() && gd.getCheckState() <= 2){
             dieLeft.roll();
             dieRight.roll();
             imageLeft.setImageResource(dieLeft.getPictureId());
             imageRight.setImageResource(dieRight.getPictureId());
-        }*/
+        }
     }
 
     public void hideBtnClick() {
-        /*if(dieLeft.isVisible()){
+        if(dieLeft.getVisible()){
             imageLeft.setImageAlpha(0);
             imageRight.setImageAlpha(0);
             dieLeft.setVisible(false);
             dieRight.setVisible(false);
-            if(gd.isChecked()){
+            if(gd.getCheckState() <= 2){
                 hideButton.setText(R.string.hide_btn_call);
+                gd.incrementChechState();
             }
             else{
                 hideButton.setText(R.string.hide_btn_show);
@@ -70,13 +71,15 @@ public class GameFragment extends Fragment {
             dieLeft.setVisible(true);
             dieRight.setVisible(true);
             hideButton.setText(R.string.hide_btn_hide);
-            gd.setChecked(true);
-        }*/
+            gd.incrementChechState();
+        }
     }
 
-    public void turnBtnClick() {
-        /*
-        gd.setChecked(false);
-        */
+    public void setGameData(GameData gd){
+        this.gd = gd;
+    }
+
+    public GameData getGameData(){
+        return gd;
     }
 }

@@ -33,7 +33,6 @@ public class CreateActivity extends AppCompatActivity {
     private ArrayList<BufferedWriter> bufferedwritters = new ArrayList<>();
     private ArrayList<ObjectInputStream> objectInputStreams = new ArrayList<>();
     private ArrayList<ObjectOutputStream> objectOutputStreams = new ArrayList<>();
-    private GameData gd;
     private String data;
 
     @Override
@@ -44,12 +43,13 @@ public class CreateActivity extends AppCompatActivity {
         appData = (ApplicationData)getApplication();
         btSockets = appData.getSockets();
 
-        gd = new GameData();
+        GameData gd = new GameData();
         gd.setPlayers(btSockets);
+        gf.setGameData(gd);
 
         setInOutStreams();
 
-        for(int i = 0; i < gd.getPlayers().size(); i++){
+        for(int i = 0; i < gf.getGameData().getPlayers().size(); i++){
             new RecieveCommand(bufferedreaders.get(i)).execute();
         }
 
@@ -60,7 +60,7 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     private void setInOutStreams(){
-        for(Entry<BluetoothSocket, Boolean> socket : gd.getPlayers().entrySet()){
+        for(Entry<BluetoothSocket, Boolean> socket : gf.getGameData().getPlayers().entrySet()){
             InputStream inputstream = null;
             OutputStream outputStream = null;
 
@@ -85,11 +85,11 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     public void nextBtnClick(View view) {
-        System.out.println("Not implemented");
+        gf.getGameData().setServerPlayerState(false);
     }
 
     public void turnBtnClick(View view) {
-        gf.turnBtnClick();
+        gf.getGameData().setServerPlayerState(true);
     }
 
     public void rollBtnClick(View view) {
@@ -101,16 +101,12 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     public void setTurn(String data){
-        if(!gd.getPlayers().containsValue(true) && !gd.getServerPlayerState()){
-            String[] command = data.split(" ");
-
-            if(command[1].equals("1")){
-                for(Entry<BluetoothSocket, Boolean> socket : gd.getPlayers().entrySet()){
-                    if(socket.getKey().getRemoteDevice().getAddress().equals(command[0])){
-                        gd.setPlayerState(socket.getKey(), true);
-                        for(ObjectOutputStream oos : objectOutputStreams){
-                            new PushGameData(oos).execute(gd);
-                        }
+        if(!gf.getGameData().getPlayers().containsValue(true) && !gf.getGameData().getServerPlayerState()){
+            for(Entry<BluetoothSocket, Boolean> socket : gf.getGameData().getPlayers().entrySet()){
+                if(socket.getKey().getRemoteDevice().getAddress().equals(data)){
+                    gf.getGameData().setPlayerState(socket.getKey(), true);
+                    for(ObjectOutputStream oos : objectOutputStreams){
+                        new PushGameData(oos).execute(gf.getGameData());
                     }
                 }
             }
@@ -212,7 +208,7 @@ public class CreateActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             if(o != null){
-                gd = (GameData) o;
+                gf.setGameData((GameData) o);
             }else {
                 System.out.println("NOTHING WAS RECIEVED!!");
             }
