@@ -27,12 +27,9 @@ public class JoinActivity extends AppCompatActivity {
 
     private GameFragment gf;
     private String serverMac;
-    private String clientMac;
     private BluetoothSocket btSocket = null;
     private BufferedReader bufferedreader;
-    private BufferedWriter bufferedwritter;
-    private ObjectInputStream ois;
-    private ObjectOutputStream oos;
+    private BufferedWriter bufferedwriter;
     private String data;
 
     @Override
@@ -62,14 +59,9 @@ public class JoinActivity extends AppCompatActivity {
         }
 
         bufferedreader = new BufferedReader(new InputStreamReader(inputstream));
-        bufferedwritter = new BufferedWriter(new OutputStreamWriter(outputStream));
+        bufferedwriter = new BufferedWriter(new OutputStreamWriter(outputStream));
 
-        try{
-            ois = new ObjectInputStream(inputstream);
-            oos = new ObjectOutputStream(outputStream);
-        } catch(IOException e){
-            e.printStackTrace();
-        }
+        new RecieveText(bufferedreader).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void nextBtnClick(View view) {
@@ -77,8 +69,8 @@ public class JoinActivity extends AppCompatActivity {
     }
 
     public void turnBtnClick(View view) {
-        //CMD 1: turn
-        new SendCommand(bufferedwritter).execute(clientMac);
+
+        new SendText(bufferedwriter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, btSocket.getRemoteDevice().getAddress());
     }
 
     public void rollBtnClick(View view) {
@@ -93,10 +85,10 @@ public class JoinActivity extends AppCompatActivity {
      * Constructor takes the Buffered writer used to write.
      * The Execute takes the String to send.
      */
-    private class SendCommand extends AsyncTask<String, Void, Void> {
+    private class SendText extends AsyncTask<String, Void, Void> {
         private BufferedWriter bufferedwriter = null;
 
-        public SendCommand(BufferedWriter writer){
+        public SendText(BufferedWriter writer){
             bufferedwriter = writer;
         }
 
@@ -104,17 +96,13 @@ public class JoinActivity extends AppCompatActivity {
         protected Void doInBackground(String... params) {
             try {
                 bufferedwriter.write(params[0]);
+                System.out.println("Outgoing: " + params[0]);
                 bufferedwriter.newLine();
                 bufferedwriter.flush();
-                System.out.println("Client with mac addr called: " + params[0] + " turn successfully");
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
-        }
-
-        protected void onPostExecute(){
-            new RecieveGameData(ois).execute();
         }
     }
 
@@ -135,6 +123,7 @@ public class JoinActivity extends AppCompatActivity {
 
             try {
                 result = bufferedreader.readLine();
+                System.out.println("Listening for incomming JSON");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -144,55 +133,8 @@ public class JoinActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             data = s;
-        }
-    }
-
-    private class PushGameData extends AsyncTask<Object, Void, Void> {
-        private ObjectOutputStream oos = null;
-
-        public PushGameData(ObjectOutputStream ooos){ oos = ooos; }
-
-        @Override
-        protected Void doInBackground(Object... params) {
-            Object gameData = null;
-
-            try {
-                oos.writeObject(gameData);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-    }
-
-    private class RecieveGameData extends AsyncTask<Void, Void, Object> {
-        private ObjectInputStream ois = null;
-
-        public RecieveGameData(ObjectInputStream oois) {
-            ois = oois;
-        }
-
-        @Override
-        protected Object doInBackground(Void... params) {
-            Object tmpGameData = null;
-
-            try {
-                tmpGameData = ois.readObject();
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            return tmpGameData;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            if(o != null){
-                gf.setGameData((GameData) o);
-            }else {
-                System.out.println("NOTHING WAS RECIEVED!!");
-            }
+            System.out.println("Incomming: " + data);
+            new RecieveText(bufferedreader).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -209,7 +151,6 @@ public class JoinActivity extends AppCompatActivity {
 
         public SocketConnection(String mac){
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            clientMac = mBluetoothAdapter.getAddress();
             BluetoothSocket tmp = null;
             mmDevice = mBluetoothAdapter.getRemoteDevice(mac);
 

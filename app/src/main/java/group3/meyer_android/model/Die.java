@@ -12,35 +12,17 @@ public class Die {
     private int[] pictures = new int[6];
     private Boolean isVisible = true;
 
-    public Die(){
-        random = new Random();
-    }
+    public Die(){ random = new Random(); }
 
-    public void roll(){
+    public void roll(){ face = random.nextInt(5) + 1; }
 
-        face = random.nextInt(5) + 1;
-    }
+    public void setPictures(int[] pictures){ this.pictures = pictures; }
 
-    public void setPictures(int[] pictures){
+    public int getFace(){ return face;}
 
-        this.pictures = pictures;
-    }
+    public int getPictureId(){ return pictures[face-1]; }
 
-    public int getFace(){
+    public void setVisible(Boolean state){ isVisible = state; }
 
-        return face;
-    }
-
-    public int getPictureId(){
-
-        return pictures[face-1];
-    }
-
-    public void setVisible(Boolean state){
-        isVisible = state;
-    }
-
-    public Boolean getVisible(){
-        return isVisible;
-    }
+    public Boolean getVisible(){ return isVisible; }
 }

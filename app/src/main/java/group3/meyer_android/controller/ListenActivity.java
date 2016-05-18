@@ -12,7 +12,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import group3.meyer_android.R;
@@ -21,7 +23,7 @@ import group3.meyer_android.model.ApplicationData;
 public class ListenActivity extends AppCompatActivity {
 
     private BluetoothAdapter mBluetoothAdapter;
-    private HashMap<BluetoothSocket, Boolean> btSockets = null;
+    private ArrayList<BluetoothSocket> btSockets = null;
     private ApplicationData appData;
 
     @Override
@@ -40,7 +42,7 @@ public class ListenActivity extends AppCompatActivity {
             }
         }
 
-        btSockets = new HashMap<>();
+        btSockets = new ArrayList<>();
     }
 
     public void startServerClick(View view) {
@@ -94,7 +96,7 @@ public class ListenActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(BluetoothSocket socket) {
-            btSockets.put(socket, false);
+            btSockets.add(socket);
         }
     }
 }

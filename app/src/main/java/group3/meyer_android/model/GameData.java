@@ -14,59 +14,39 @@ import java.util.Set;
  */
 public class GameData {
 
-    private Die leftDie, rightDie;
-    private HashMap<BluetoothSocket, Boolean> players;
-    private Boolean serverPlayerState = false;
+    private int leftFace, rightFace;
+    private String currentPlayer = null;
     private int checkState = 0;
 
-    public GameData(){
-        leftDie = new Die();
-        rightDie = new Die();
-        players = new HashMap<>();
+    public GameData(){}
+
+    public int getLeftFace() {
+        return leftFace;
     }
 
-    public void setPictures(int[] pictures){
-        leftDie.setPictures(pictures);
-        rightDie.setPictures(pictures);
+    public void setLeftFace(int leftFace) {
+        this.leftFace = leftFace;
     }
 
-    public void setPlayers(HashMap<BluetoothSocket, Boolean> players){
-        this.players = players;
+    public int getRightFace() {
+        return rightFace;
     }
 
-    public HashMap<BluetoothSocket, Boolean> getPlayers(){
-        return players;
+    public void setRightFace(int rightFace) {
+        this.rightFace = rightFace;
     }
 
-    public void setServerPlayerState(Boolean state){
-        serverPlayerState = state;
+    public void setCheckState(int checkState) {
+        this.checkState = checkState;
     }
 
-    public Boolean getServerPlayerState(){
-        return serverPlayerState;
-    }
+    public void setCurrentPlayer(String player){ currentPlayer = player; }
 
-    public Boolean getPlayerState(BluetoothSocket socket){
-        return players.containsKey(socket);
-    }
+    public String getCurrentPlayer(){ return currentPlayer; }
 
-    public void setPlayerState(BluetoothSocket socket, Boolean state){
-        for(Entry<BluetoothSocket, Boolean> sockets : players.entrySet()){
-            if(sockets.getKey() == socket){
-                sockets.setValue(state);
-            }
-        }
-    }
+    public void incrementChechState(){ checkState++; }
 
-    public void incrementChechState(){
-        checkState++;
-    }
+    public int getCheckState(){ return checkState; }
 
-    public int getCheckState(){
-        return checkState;
-    }
-
-    public void resetCheckState(){
-        checkState = 0;
-    }
+    public void resetCheckState(){ checkState = 0; }
 }

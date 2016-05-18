@@ -11,28 +11,21 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
+import java.util.concurrent.Executor;
 
 import group3.meyer_android.R;
 import group3.meyer_android.model.ApplicationData;
-import group3.meyer_android.model.GameData;
 import group3.meyer_android.view.GameFragment;
 
 public class CreateActivity extends AppCompatActivity {
 
     private GameFragment gf;
-    private HashMap<BluetoothSocket, Boolean> btSockets;
     private ApplicationData appData;
     private ArrayList<BufferedReader> bufferedreaders = new ArrayList<>();
-    private ArrayList<BufferedWriter> bufferedwritters = new ArrayList<>();
-    private ArrayList<ObjectInputStream> objectInputStreams = new ArrayList<>();
-    private ArrayList<ObjectOutputStream> objectOutputStreams = new ArrayList<>();
+    private ArrayList<BufferedWriter> bufferedwriters = new ArrayList<>();
     private String data;
 
     @Override
@@ -41,55 +34,52 @@ public class CreateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create);
 
         appData = (ApplicationData)getApplication();
-        btSockets = appData.getSockets();
-
-        GameData gd = new GameData();
-        gd.setPlayers(btSockets);
-        gf.setGameData(gd);
-
-        setInOutStreams();
-
-        for(int i = 0; i < gf.getGameData().getPlayers().size(); i++){
-            new RecieveCommand(bufferedreaders.get(i)).execute();
-        }
 
         if(savedInstanceState == null) {
             gf = new GameFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.GameContainer, gf).commit();
         }
+
+        setInOutStreams();
+
+        System.out.println("Following devices has been connected:");
+        for(BluetoothSocket bs : appData.getSockets()){
+            System.out.println(bs.getRemoteDevice().getName());
+        }
+
+
+        for(int i = 0; i < appData.getSockets().size(); i++){
+            new RecieveText(bufferedreaders.get(i)).execute();
+        }
     }
 
     private void setInOutStreams(){
-        for(Entry<BluetoothSocket, Boolean> socket : gf.getGameData().getPlayers().entrySet()){
-            InputStream inputstream = null;
+        for(BluetoothSocket socket : appData.getSockets()){
+            InputStream inputStream = null;
             OutputStream outputStream = null;
 
             try {
-                inputstream = socket.getKey().getInputStream();
-                outputStream = socket.getKey().getOutputStream();
+                inputStream = socket.getInputStream();
+                outputStream = socket.getOutputStream();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Could not create in- and output stream");
                 return;
             }
 
-            bufferedreaders.add(new BufferedReader(new InputStreamReader(inputstream)));
-            bufferedwritters.add(new BufferedWriter(new OutputStreamWriter(outputStream)));
-            try{
-                objectInputStreams.add(new ObjectInputStream(inputstream));
-                objectOutputStreams.add(new ObjectOutputStream(outputStream));
-            }catch (IOException e){
-                e.printStackTrace();
-                return;
-            }
+            bufferedreaders.add(new BufferedReader(new InputStreamReader(inputStream)));
+            bufferedwriters.add(new BufferedWriter(new OutputStreamWriter(outputStream)));
+            System.out.println("Created in- and output stream for server");
         }
     }
 
     public void nextBtnClick(View view) {
-        gf.getGameData().setServerPlayerState(false);
+
     }
 
     public void turnBtnClick(View view) {
-        gf.getGameData().setServerPlayerState(true);
+        for(int i = 0 ; i < appData.getSockets().size() ; i++){
+            new SendText(bufferedwriters.get(i)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "herp");
+        }
     }
 
     public void rollBtnClick(View view) {
@@ -98,19 +88,6 @@ public class CreateActivity extends AppCompatActivity {
 
     public void hideBtnClick(View view) {
         gf.hideBtnClick();
-    }
-
-    public void setTurn(String data){
-        if(!gf.getGameData().getPlayers().containsValue(true) && !gf.getGameData().getServerPlayerState()){
-            for(Entry<BluetoothSocket, Boolean> socket : gf.getGameData().getPlayers().entrySet()){
-                if(socket.getKey().getRemoteDevice().getAddress().equals(data)){
-                    gf.getGameData().setPlayerState(socket.getKey(), true);
-                    for(ObjectOutputStream oos : objectOutputStreams){
-                        new PushGameData(oos).execute(gf.getGameData());
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -128,6 +105,7 @@ public class CreateActivity extends AppCompatActivity {
         protected Void doInBackground(String... params) {
             try {
                 bufferedwriter.write(params[0]);
+                System.out.println("Outgoing: " + params[0]);
                 bufferedwriter.newLine();
                 bufferedwriter.flush();
             } catch (IOException e) {
@@ -141,10 +119,10 @@ public class CreateActivity extends AppCompatActivity {
      * Constructor takes the Buffered reader used to read.
      * The class sets the data variable with the result from the read.
      */
-    private class RecieveCommand extends AsyncTask<Void, Void, String> {
+    private class RecieveText extends AsyncTask<Void, Void, String> {
         private BufferedReader bufferedreader = null;
 
-        public RecieveCommand(BufferedReader reader){
+        public RecieveText(BufferedReader reader){
             bufferedreader = reader;
         }
 
@@ -154,6 +132,7 @@ public class CreateActivity extends AppCompatActivity {
 
             try {
                 result = bufferedreader.readLine();
+                System.out.println("Listening for incomming JSON");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -163,56 +142,8 @@ public class CreateActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             data = s;
-            setTurn(data);
-            new RecieveCommand(bufferedreader).execute();
+            System.out.println("Incomming: " + data);
+            new RecieveText(bufferedreader).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
-
-    private class PushGameData extends AsyncTask<Object, Void, Void> {
-        private ObjectOutputStream oos = null;
-
-        public PushGameData(ObjectOutputStream ooos){ oos = ooos; }
-
-        @Override
-        protected Void doInBackground(Object... params) {
-            Object gameData = null;
-
-            try {
-                oos.writeObject(gameData);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-    }
-
-    private class RecieveGameData extends AsyncTask<Void, Void, Object> {
-        private ObjectInputStream ois = null;
-
-        public RecieveGameData(ObjectInputStream oois){ ois = oois; }
-
-        @Override
-        protected Object doInBackground(Void... params) {
-            Object tmpGameData = null;
-
-            try{
-                tmpGameData = ois.readObject();
-            } catch(IOException | ClassNotFoundException e){
-                e.printStackTrace();
-            }
-
-            return tmpGameData;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            if(o != null){
-                gf.setGameData((GameData) o);
-            }else {
-                System.out.println("NOTHING WAS RECIEVED!!");
-            }
-        }
-    }
-
 }
