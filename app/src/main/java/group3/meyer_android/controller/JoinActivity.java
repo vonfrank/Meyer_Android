@@ -15,20 +15,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.sql.SQLOutput;
 import java.util.UUID;
 
 import group3.meyer_android.R;
-import group3.meyer_android.model.ApplicationData;
 import group3.meyer_android.view.GameFragment;
 
 public class JoinActivity extends AppCompatActivity {
 
     private GameFragment gf;
     private String serverMac;
+    private String clientMac;
     private BluetoothSocket btSocket = null;
-    private BluetoothAdapter btAdapter = null;
-    private BluetoothDevice btDevice = null;
     private BufferedReader bufferedreader;
     private BufferedWriter bufferedwritter;
     private String data;
@@ -69,7 +66,8 @@ public class JoinActivity extends AppCompatActivity {
 
     public void turnBtnClick(View view) {
         //gf.turnBtnClick();
-        new SendText(bufferedwritter).execute("test string");
+        //CMD 1: turn
+        new SendCommand(bufferedwritter).execute(clientMac + " 1");
     }
 
     public void rollBtnClick(View view) {
@@ -84,24 +82,20 @@ public class JoinActivity extends AppCompatActivity {
      * Constructor takes the Buffered writer used to write.
      * The Execute takes the String to send.
      */
-    private class SendText extends AsyncTask<String, Void, Void> {
+    private class SendCommand extends AsyncTask<String, Void, Void> {
         private BufferedWriter bufferedwriter = null;
 
-        public SendText(BufferedWriter writer){
+        public SendCommand(BufferedWriter writer){
             bufferedwriter = writer;
-            System.out.println(bufferedwriter.toString());
         }
 
         @Override
         protected Void doInBackground(String... params) {
-            System.out.println("I am in the Execute with this param: " + params[0]);
             try {
                 bufferedwriter.write(params[0]);
-                System.out.println("I wrote shit");
                 bufferedwriter.newLine();
-                System.out.println("Sending new line");
                 bufferedwriter.flush();
-                System.out.println("Flushed");
+                System.out.println("Client with mac addr called: " + params[0] + " successfully");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -151,6 +145,7 @@ public class JoinActivity extends AppCompatActivity {
 
         public SocketConnection(String mac){
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            clientMac = mBluetoothAdapter.getAddress();
             BluetoothSocket tmp = null;
             mmDevice = mBluetoothAdapter.getRemoteDevice(mac);
 

@@ -8,7 +8,6 @@ import java.util.Random;
 public class Die {
 
     private int face;
-    private boolean isVisible = true;
     private Random random;
     private int[] pictures = new int[6];
 
@@ -34,15 +33,5 @@ public class Die {
     public int getPictureId(){
 
         return pictures[face-1];
-    }
-
-    public boolean isVisible(){
-
-        return isVisible;
-    }
-
-    public void setVisible(boolean isVisible){
-
-        this.isVisible = isVisible;
     }
 }

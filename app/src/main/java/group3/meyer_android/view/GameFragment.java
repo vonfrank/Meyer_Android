@@ -35,29 +35,25 @@ public class GameFragment extends Fragment {
     }
 
     private void initialize(){
-        dieLeft = new Die();
-        dieRight = new Die();
         gd = new GameData();
-
         int[] idArray = {R.drawable.die_01, R.drawable.die_02, R.drawable.die_03, R.drawable.die_04, R.drawable.die_05, R.drawable.die_06};
-        dieLeft.setPictures(idArray);
-        dieRight.setPictures(idArray);
+        gd.setPictures(idArray);
         imageLeft = (ImageView) getView().findViewById(R.id.dieLeftImageView);
         imageRight = (ImageView) getView().findViewById(R.id.dieRightImageView);
         hideButton = (Button) getView().findViewById(R.id.hideBtn);
     }
 
     public void rollBtnClick() {
-        if(!dieLeft.isVisible() && !gd.isChecked()){
+        /*if(!dieLeft.isVisible() && !gd.isChecked()){
             dieLeft.roll();
             dieRight.roll();
             imageLeft.setImageResource(dieLeft.getPictureId());
             imageRight.setImageResource(dieRight.getPictureId());
-        }
+        }*/
     }
 
     public void hideBtnClick() {
-        if(dieLeft.isVisible()){
+        /*if(dieLeft.isVisible()){
             imageLeft.setImageAlpha(0);
             imageRight.setImageAlpha(0);
             dieLeft.setVisible(false);
@@ -75,10 +71,12 @@ public class GameFragment extends Fragment {
             dieRight.setVisible(true);
             hideButton.setText(R.string.hide_btn_hide);
             gd.setChecked(true);
-        }
+        }*/
     }
 
     public void turnBtnClick() {
+        /*
         gd.setChecked(false);
+        */
     }
 }
