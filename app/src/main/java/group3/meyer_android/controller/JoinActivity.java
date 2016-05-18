@@ -65,21 +65,24 @@ public class JoinActivity extends AppCompatActivity {
     }
 
     public void nextBtnClick(View view) {
-        System.out.println("Not implemented");
+
+        gf.nextBtnClick();
+
+        new SendText(bufferedwriter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, gf.getGameData().toJSON());
     }
 
     public void turnBtnClick(View view) {
 
-        new SendText(bufferedwriter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, btSocket.getRemoteDevice().getAddress());
+        gf.turnBtnClick();;
+
+        new SendText(bufferedwriter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, gf.getGameData().toJSON());
     }
 
     public void rollBtnClick(View view) {
         gf.rollBtnClick();
     }
 
-    public void hideBtnClick(View view) {
-        gf.hideBtnClick();
-    }
+    public void hideBtnClick(View view) { gf.hideBtnClick(); }
 
     /**
      * Constructor takes the Buffered writer used to write.
@@ -133,6 +136,9 @@ public class JoinActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             data = s;
+            GameData tmp = new GameData();
+            tmp.fromJSON(data);
+            gf.setGameData(tmp);
             System.out.println("Incomming: " + data);
             new RecieveText(bufferedreader).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

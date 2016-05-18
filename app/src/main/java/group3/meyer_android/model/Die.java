@@ -25,4 +25,6 @@ public class Die {
     public void setVisible(Boolean state){ isVisible = state; }
 
     public Boolean getVisible(){ return isVisible; }
+
+    public void setFace(int face) {this.face = face; }
 }

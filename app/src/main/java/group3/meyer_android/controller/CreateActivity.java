@@ -18,6 +18,7 @@ import java.util.concurrent.Executor;
 
 import group3.meyer_android.R;
 import group3.meyer_android.model.ApplicationData;
+import group3.meyer_android.model.GameData;
 import group3.meyer_android.view.GameFragment;
 
 public class CreateActivity extends AppCompatActivity {
@@ -73,21 +74,27 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     public void nextBtnClick(View view) {
+        gf.nextBtnClick();
 
+        broadcastGameData(gf.getGameData().toJSON());
     }
 
     public void turnBtnClick(View view) {
-        for(int i = 0 ; i < appData.getSockets().size() ; i++){
-            new SendText(bufferedwriters.get(i)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "herp");
-        }
+        gf.turnBtnClick();
+
+        broadcastGameData(gf.getGameData().toJSON());
     }
 
-    public void rollBtnClick(View view) {
-        gf.rollBtnClick();
-    }
+    public void rollBtnClick(View view) { gf.rollBtnClick();}
 
     public void hideBtnClick(View view) {
         gf.hideBtnClick();
+    }
+
+    public void broadcastGameData(String JSON){
+        for(int i = 0 ; i < appData.getSockets().size() ; i++){
+            new SendText(bufferedwriters.get(i)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, JSON);
+        }
     }
 
     /**
@@ -143,6 +150,10 @@ public class CreateActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             data = s;
             System.out.println("Incomming: " + data);
+            GameData tmp = new GameData();
+            tmp.fromJSON(data);
+            gf.setGameData(tmp);
+            broadcastGameData(gf.getGameData().toJSON());
             new RecieveText(bufferedreader).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }

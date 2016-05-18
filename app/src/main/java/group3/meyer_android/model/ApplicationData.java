@@ -13,6 +13,7 @@ import java.util.HashMap;
 public class ApplicationData extends Application {
 
     private ArrayList<BluetoothSocket> sockets = new ArrayList();
+    private String serverMac;
 
     public void addSocket(BluetoothSocket socket){
 
@@ -36,4 +37,8 @@ public class ApplicationData extends Application {
     public void setSockets(ArrayList<BluetoothSocket> sockets){
         this.sockets = sockets;
     }
+
+    public void setServerMac(String serverMac) { this.serverMac = serverMac; }
+
+    public String getServerMac(){ return serverMac; }
 }

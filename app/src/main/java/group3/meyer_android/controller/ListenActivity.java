@@ -51,6 +51,7 @@ public class ListenActivity extends AppCompatActivity {
 
     public void startGameClick(View view) {
         appData.setSockets(btSockets);
+        appData.setServerMac(mBluetoothAdapter.getAddress());
         Intent newGameIntent = new Intent(this, CreateActivity.class);
         startActivity(newGameIntent);
     }
